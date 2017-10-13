@@ -1,0 +1,17 @@
+<%= form_with(model: lote, local: true) do |form| %>
+  <% if lote.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(lote.errors.count, "error") %> prohibited this lote from being saved:</h2>
+
+      <ul>
+      <% lote.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

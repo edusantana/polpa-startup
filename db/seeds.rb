@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+lote = Lote.create({data: Time.now, ativo: true})
+
+pmaracuja = Produto.create({nome: "Polpa de Maracujá (1kg)", quantidade: 25, valor: 12.0, lote_id: lote.id})
+
