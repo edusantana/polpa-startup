@@ -9,7 +9,7 @@ class Encomenda < ApplicationRecord
       soma += pp.valor
     end
 
-    soma
+    soma + frete
   end
 
 end

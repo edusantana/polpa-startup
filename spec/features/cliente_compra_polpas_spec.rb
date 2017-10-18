@@ -24,13 +24,14 @@ RSpec.feature "ClienteCompraPolpas", type: :feature do
     e_preenche_o_celular
     e_clica_em_criar_encomenda
     entao_encomenda_foi_criada
-    entao_existe_link_de_compartilhamento
+    entao_existe_link_de_compartilhamento    
   end
 
   scenario "Selecionando produtos para encomenda" do
     dado_existe_um_lote_com_5_produtos
     e_uma_encomenda_recem_criada
     e_estamos_na_pagina_da_encomenda
+    entao_os_precos_dos_produtos_sao_exibidos
     quando_preencher_nome
     e_preenche_o_celular
     e_especificar_quantidade_do_produto({0=>1})
@@ -42,10 +43,29 @@ RSpec.feature "ClienteCompraPolpas", type: :feature do
     quando_clicar_em_adicionar_pedido
     entao_o_pedido_foi_adicionado_a_encomenda
     e_o_valor_de_cada_pedido_eh_exibido
-    e_o_valor_do_frete_foi_dividido_igualmente_para_cada_pedido
+    e_o_valor_do_frete_eh_exibido
     e_o_preco_total_da_encomenda_eh_exibido
     e_o_botao_finalizar_e_pagar_esta_visivel_e_ativo
   end
+
+  scenario "Encomenda é criada sem pedidos" do
+    dado_existe_um_lote_com_5_produtos
+    e_uma_encomenda_recem_criada
+    e_estamos_na_pagina_da_encomenda
+    entao_nao_ha_pedidos_cadastrados
+  end
+
+  scenario "Pedidos com quantidade zero não são adicionados à encomenda" do
+    dado_existe_um_lote_com_5_produtos
+    e_uma_encomenda_recem_criada
+    e_estamos_na_pagina_da_encomenda
+    quando_preencher_nome
+    e_preenche_o_celular
+    quando_selecionar_quantidade_de_apenas_um_produto
+    quando_clicar_em_adicionar_pedido
+    entao_apenas_o_produto_selecionado_sera_listado_nos_pedidos
+  end
+  
 
 #  dado_no_lote_existe_produto 'Maracujá', 20, 11.0
  # dado_no_lote_existe_produto 'Uva', 25, 9.0
@@ -85,6 +105,16 @@ RSpec.feature "ClienteCompraPolpas", type: :feature do
 
   def entao_os_produtos_do_lote_estao_visiveis
     expect(page).to have_content(@lote.produtos.first.nome)
+  end
+
+  def entao_os_precos_dos_produtos_sao_exibidos
+    @lote.produtos.each do |produto|
+      expect(page).to have_content(produto.valor.to_s(:currency))
+    end
+  end
+
+  def entao_nao_ha_pedidos_cadastrados
+    expect(page).to have_content('Nenhum pedido cadastrado.')
   end
 
   def entao_existe_link_para_criar_encomenda
@@ -150,12 +180,29 @@ RSpec.feature "ClienteCompraPolpas", type: :feature do
     end
   end
 
+  def quando_selecionar_quantidade_de_apenas_um_produto
+    @produto = @lote.produtos.first
+    fill_in('produto['+@produto.id.to_s+']', with: '1')
+  end
+
   def entao_o_preco_tocal_eh_calculado_e_exibido
     pending
   end
   def e_o_preco_total_da_encomenda_eh_exibido
+    expect(page).to have_text('Total')
     expect(page).to have_text(@encomenda.total.to_s(:currency))
   end
+
+  def e_o_valor_de_cada_pedido_eh_exibido
+    @encomenda.pedidos.each do |pedido|
+      expect(page).to have_text(pedido.total.to_s(:currency))
+    end
+  end
+
+  def e_o_valor_do_frete_eh_exibido
+    expect(page).to have_text(@encomenda.frete.to_s(:currency))
+  end
+
   def entao_o_pedido_foi_adicionado_a_encomenda
     @encomenda.reload
     expect(@encomenda.pedidos).not_to be_empty
@@ -163,6 +210,15 @@ RSpec.feature "ClienteCompraPolpas", type: :feature do
 
   def e_o_botao_finalizar_e_pagar_esta_visivel_e_ativo
     expect(page).to have_button('Finalizar e pagar')
+  end
+
+  def entao_apenas_o_produto_selecionado_sera_listado_nos_pedidos
+    @lote.produtos.each do |produto|
+      if produto != @produto then
+        expect(find('#pedidos')).not_to have_text(produto.nome)
+      end
+    end
+    
   end
 
 end

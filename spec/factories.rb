@@ -25,6 +25,7 @@ FactoryGirl.define do
     celular '83988040125'
     endereco 'Rua Imaginária dos Santos Silva'
     uuid SecureRandom.uuid
+    frete 5.0
   end
 
   factory :pedido do

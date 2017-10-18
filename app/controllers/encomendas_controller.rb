@@ -29,6 +29,8 @@ class EncomendasController < ApplicationController
     @encomenda = Encomenda.new(encomenda_params)
     @encomenda.uuid = SecureRandom.uuid
 
+    @encomenda.frete = 5.0
+
     respond_to do |format|
       if @encomenda.save
         format.html { redirect_to encomenda_path(@encomenda, @encomenda.uuid), notice: 'Encomenda iniciada.' }
@@ -42,7 +44,7 @@ class EncomendasController < ApplicationController
     @pedido = @encomenda.pedidos.create(nome: pedido_params['nome'], celular: pedido_params['telefone'])
     pedido_params['produto'].each do |produto_id|
       quantidade = pedido_params[:produto][produto_id]
-      @pedido.pedido_produtos << @pedido.pedido_produtos.create(produto_id: produto_id, quantidade: quantidade)
+      @pedido.pedido_produtos << @pedido.pedido_produtos.create(produto_id: produto_id, quantidade: quantidade) unless 0 == quantidade.to_i
     end
     @pedido.save
     redirect_to encomenda_path(@encomenda, @encomenda.uuid), notice: 'Pedido adicionado à encomenda.' 

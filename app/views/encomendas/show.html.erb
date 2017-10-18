@@ -17,30 +17,6 @@
   </tbody>
 </table>
 
-<h2>Pedidos adicionados</h2>
-
-<table>
-  <thead>
-    <th>Nome</th>
-    <th>Valor</th>
-    <th>Produtos</th>
-  </thead>
-  <tbody>
-    <% for p in @encomenda.pedidos %>
-      <tr>
-        <td><%= p.nome %></td>
-        <td><%= p.total.to_s(:currency) %></td>
-        <td><%= "produtos" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
-<%= form_tag do %>
-<%= submit_tag("Finalizar e pagar") %><br>
-
-<% end %>
 
 
 <h2>Adicionar pedido à encomenda <a id="whatsapp_link" href="whatsapp://send?text=<%= request.original_url %>">
@@ -50,7 +26,7 @@
 
 
 <p>
-  Você pode compartilhar o link dessa página com amigos(as) para que eles possam adicionar pedidos à mesma encomenda.
+  Você pode compartilhar o link dessa página com amigos para que possam adicionar pedidos à mesma encomenda.
 </p>
 
 <%= form_tag do %>
@@ -64,10 +40,61 @@
 <% for p in @encomenda.lote.produtos %>
   <br>
   <%= number_field(:produto, p.id, in: 0..p.quantidade, step: 1, value: 0) %>
-  <%= label_tag(:produto, p.nome) %>
+  <%= label_tag(:produto, p.nome) %> -- <%= p.valor.to_s(:currency) %>
 <% end %>
 
 <br>
 <%= submit_tag("Adicionar pedido") %><br>
 
 <% end %>
+
+
+<h2>Pedidos adicionados</h2>
+
+<% if (@encomenda.pedidos.empty?) %>
+  <p>Nenhum pedido cadastrado.</p>
+<% else %>
+  <table id="pedidos">
+    <thead>
+      <th>Nome</th>
+      <th>Valor</th>
+      <th>Produtos</th>
+    </thead>
+    <tbody>
+      <% for p in @encomenda.pedidos %>
+        <tr>
+          <td><%= p.nome %></td>
+          <td><%= p.total.to_s(:currency) %></td>
+          <td>
+            <ul style="list-style: none;">
+            <% for pp in p.pedido_produtos %>
+              <li style="display:inline;">
+                <%= pp.quantidade %>x<%= pp.produto.nome %>; 
+              </li>
+            <% end %>
+            </ul>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td><strong>Frete</strong></td>
+        <td><%= @encomenda.frete.to_s(:currency) %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td><%= @encomenda.total.to_s(:currency) %></td>
+        <td></td>
+      </tr>
+
+    </tbody>
+  </table>
+
+
+  <%= form_tag do %>
+  <%= submit_tag("Finalizar e pagar") %><br>
+
+  <% end %>
+
+<% end %>
+
