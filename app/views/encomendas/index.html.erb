@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Encomendas</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @encomendas.each do |encomenda| %>
+      <tr>
+        <td><%= link_to 'Show', encomenda %></td>
+        <td><%= link_to 'Edit', edit_encomenda_path(encomenda) %></td>
+        <td><%= link_to 'Destroy', encomenda, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Encomenda', new_encomenda_path %>

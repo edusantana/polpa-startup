@@ -9,4 +9,5 @@
 lote = Lote.create({data: Time.now, ativo: true})
 
 pmaracuja = Produto.create({nome: "Polpa de Maracujá (1kg)", quantidade: 25, valor: 12.0, lote_id: lote.id})
+pmaracuja = Produto.create({nome: "Polpa de Morango (1kg)", quantidade: 20, valor: 14.0, lote_id: lote.id})
 

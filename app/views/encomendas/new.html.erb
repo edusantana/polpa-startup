@@ -1,0 +1,16 @@
+<h1>Realizando uma nova encomenda</h1>
+
+<!-- %= render 'form', encomenda: @encomenda %-->
+
+
+<%= form_tag(action:'create', method:'post') do %>
+  <%= label_tag(:responsavel, "Responsável pela encomenda:") %> <br>
+  <%= text_field_tag(:responsavel) %><br>
+  <%= label_tag(:celular, "Telefone celular:") %><br>
+  <%= text_field_tag(:celular) %><br>
+  <%= label_tag(:endereco, "Endereço de entrega:") %><br>
+  <%= text_area_tag(:endereco) %><br>
+  <%= submit_tag("Criar encomenda") %><br>
+<% end %>
+
+<%= link_to 'Voltar', lote_path(@lote) %>

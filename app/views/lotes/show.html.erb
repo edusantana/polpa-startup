@@ -2,5 +2,51 @@
 
 <h1>Lote de <%= @lote.data.strftime('%m/%d/%Y') %> </h1>
 
+<ul>
+  <li><%= link_to 'Realizar encomenda', new_lote_encomenda_path(@lote) %></li>
+</ul>
 
-<%= link_to 'Voltar', lotes_path %>
+
+<h2>Produtos</h2>
+
+
+
+<table>
+  <thead>
+    <th>
+      Quantidade no lote
+    </th>
+    <th>
+      Produto
+    </th>
+    <th>
+      Valor Unitário
+    </th>
+
+  </thead>
+  <tbody>
+    <% for p in @lote.produtos %>
+    <tr>
+      <td><%= p.quantidade %> </td>
+      <td><%= p.nome %> </td>
+      <td><%= p.valor %> </td>
+    </tr>
+    <tr>
+      
+    </tr>
+    <tr>
+      
+    </tr>
+    <% end %>
+
+
+  </tbody>
+</table>
+
+<ul>
+    <li><%= link_to 'Criar encomenda', new_lote_encomenda_path(@lote) %></li>
+    <li><%= link_to 'Voltar', lotes_path %></li>
+    
+</ul>
+  
+
